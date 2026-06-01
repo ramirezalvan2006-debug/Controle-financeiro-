@@ -1,0 +1,1320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Finanças Pro — Seu Agente Financeiro Pessoal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #020205;
+    --red: #FF2D2D;
+    --red-dim: #8B0000;
+    --green: #00FF87;
+    --green-dim: #00CC6A;
+    --white: #F0EEE9;
+    --grey: #888;
+    --card-bg: #0A0A0F;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.5;
+  }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(2,2,5,0.95);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .logo-dot {
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+    flex-shrink: 0;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.7); }
+  }
+
+  .nav-cta {
+    background: var(--green) !important;
+    color: #020205 !important;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 4px;
+    transition: all 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .nav-cta:hover { background: #fff !important; transform: translateY(-1px); }
+
+  /* ===== HERO ===== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 32px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Grid background */
+  .hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+  }
+
+  /* Red glow */
+  .glow-red {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,45,45,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    pointer-events: none;
+    animation: floatGlow 8s ease-in-out infinite;
+  }
+  .glow-green {
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,255,135,0.08) 0%, transparent 70%);
+    bottom: 100px; left: -100px;
+    pointer-events: none;
+    animation: floatGlow 10s ease-in-out infinite reverse;
+  }
+  @keyframes floatGlow {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(20px, -20px); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,45,45,0.1);
+    border: 1px solid rgba(255,45,45,0.3);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--red);
+    letter-spacing: 1px;
+    margin-bottom: 32px;
+    width: fit-content;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: blink 1s step-start infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: clamp(42px, 9vw, 88px);
+    line-height: 0.95;
+    letter-spacing: -3px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .h1-line1 { display: block; color: var(--white); }
+  .h1-line2 {
+    display: block;
+    color: var(--green);
+    position: relative;
+  }
+  .h1-line3 {
+    display: block;
+    color: rgba(255,255,255,0.2);
+    text-decoration: line-through;
+    text-decoration-color: var(--red);
+    text-decoration-thickness: 3px;
+    font-size: 0.65em;
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: rgba(240,238,233,0.55);
+    line-height: 1.6;
+    max-width: 520px;
+    margin-bottom: 40px;
+    font-weight: 300;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-sub strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .hero-cta-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--green);
+    color: var(--black);
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 18px 32px;
+    border: none;
+    border-radius: 6px;
+    
+    transition: all 0.25s;
+    text-decoration: none;
+    letter-spacing: 0.3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.2);
+    transform: skewX(-20deg);
+    transition: left 0.4s ease;
+  }
+  .btn-primary:hover::before { left: 150%; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(0,255,135,0.3); }
+
+  .price-tag {
+    background: var(--black);
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    padding: 4px 12px;
+    border-radius: 4px;
+  }
+
+  .trust-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.35);
+    font-family: 'Space Mono', monospace;
+  }
+  .trust-item svg { color: var(--green); opacity: 0.7; }
+
+  /* Animated counter strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 56px;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+  .stat-item {
+    background: var(--card-bg);
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    display: block;
+  }
+  .stat-num span { color: var(--green); }
+  .stat-label {
+    font-size: 10px;
+    color: var(--grey);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== PAIN SECTION ===== */
+  .pain-section {
+    padding: 80px 32px;
+    position: relative;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--red);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-tag::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--red);
+  }
+
+  .pain-title {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 40px;
+    color: var(--white);
+  }
+  .pain-title em {
+    font-style: normal;
+    color: var(--red);
+  }
+
+  .pain-list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .pain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .pain-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--red);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .pain-item:hover { border-color: rgba(255,45,45,0.3); transform: translateX(4px); }
+  .pain-item:hover::before { opacity: 1; }
+
+  .pain-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .pain-text {
+    font-size: 15px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.5;
+  }
+  .pain-text strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ===== SOLUTION SECTION ===== */
+  .solution-section {
+    padding: 80px 32px;
+    background: linear-gradient(180deg, transparent, rgba(0,255,135,0.03), transparent);
+    position: relative;
+  }
+
+  .solution-intro {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(26px, 5.5vw, 44px);
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+    color: var(--white);
+  }
+  .solution-intro em {
+    font-style: normal;
+    color: var(--green);
+  }
+
+  .solution-sub {
+    color: rgba(255,255,255,0.4);
+    font-size: 15px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+    max-width: 480px;
+  }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+  }
+
+  .feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 24px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .feature-card:hover {
+    border-color: rgba(0,255,135,0.25);
+    background: rgba(0,255,135,0.03);
+  }
+  .feature-card.featured {
+    grid-column: 1 / -1;
+    border-color: rgba(0,255,135,0.2);
+    background: linear-gradient(135deg, rgba(0,255,135,0.05), var(--card-bg));
+  }
+
+  .feature-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    letter-spacing: 2px;
+    opacity: 0.6;
+    margin-bottom: 12px;
+  }
+
+  .feature-icon-wrap {
+    width: 40px; height: 40px;
+    background: rgba(0,255,135,0.08);
+    border: 1px solid rgba(0,255,135,0.15);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .feature-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--white);
+    margin-bottom: 8px;
+    letter-spacing: -0.3px;
+  }
+
+  .feature-desc {
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.5;
+  }
+
+  /* ===== DASHBOARD PREVIEW ===== */
+  .preview-section {
+    padding: 60px 32px;
+  }
+
+  .dashboard-mock {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .dash-header {
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .dash-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dash-dot.r { background: #FF5F57; }
+  .dash-dot.y { background: #FFBD2E; }
+  .dash-dot.g { background: #28CA41; }
+  .dash-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.25);
+    margin-left: 8px;
+  }
+
+  .dash-body {
+    padding: 24px 20px;
+  }
+
+  .dash-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .dash-metric {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .dash-metric.green { border-color: rgba(0,255,135,0.15); }
+  .dash-metric.red { border-color: rgba(255,45,45,0.15); }
+
+  .dash-metric-label {
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    color: var(--grey);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .dash-metric-val {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  .dash-metric-val.pos { color: var(--green); }
+  .dash-metric-val.neg { color: var(--red); }
+  .dash-metric-val.neu { color: var(--white); }
+
+  .dash-metric-change {
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    margin-top: 4px;
+  }
+  .dash-metric-change.up { color: var(--green); }
+  .dash-metric-change.dn { color: var(--red); }
+
+  /* Bar chart mock */
+  .dash-chart-area {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .chart-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--grey);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 60px;
+  }
+  .bar {
+    flex: 1;
+    border-radius: 3px 3px 0 0;
+    position: relative;
+    transition: opacity 0.2s;
+  }
+  .bar-label {
+    position: absolute;
+    bottom: -18px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 8px;
+    font-family: 'Space Mono', monospace;
+    color: var(--grey);
+    white-space: nowrap;
+  }
+
+  /* AI insight row */
+  .ai-insight {
+    background: rgba(0,255,135,0.05);
+    border: 1px solid rgba(0,255,135,0.15);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .ai-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    background: var(--green);
+    color: var(--black);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .ai-text {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.4;
+  }
+  .ai-text strong { color: var(--green); font-weight: 500; }
+
+  /* ===== SOCIAL PROOF ===== */
+  .proof-section {
+    padding: 70px 32px;
+  }
+
+  .testimonials {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 32px;
+  }
+
+  .testimonial {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .testimonial-text {
+    font-size: 14px;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+  .testimonial-text em {
+    font-style: normal;
+    color: var(--green);
+    font-weight: 500;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .author-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #333, #555);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Syne', sans-serif;
+    color: var(--white);
+    flex-shrink: 0;
+  }
+  .author-info { flex: 1; }
+  .author-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+  }
+  .author-role {
+    font-size: 11px;
+    color: var(--grey);
+    font-family: 'Space Mono', monospace;
+  }
+  .stars {
+    color: #FFD700;
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+
+  /* Result badge */
+  .result-badge {
+    display: inline-flex;
+    align-self: flex-start;
+    background: rgba(0,255,135,0.1);
+    border: 1px solid rgba(0,255,135,0.2);
+    border-radius: 100px;
+    padding: 4px 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--green);
+    margin-bottom: 12px;
+    white-space: nowrap;
+  }
+
+  /* ===== FINAL CTA ===== */
+  .cta-section {
+    padding: 80px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,255,135,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .cta-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--green);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.7;
+  }
+
+  .cta-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 8vw, 60px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.0;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+  .cta-heading .highlight { color: var(--green); }
+
+  .cta-sub {
+    color: rgba(255,255,255,0.4);
+    font-size: 15px;
+    margin-bottom: 36px;
+    line-height: 1.6;
+  }
+
+  .price-block {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 24px;
+  }
+  .price-old {
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    color: var(--red);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+  .price-main {
+    font-family: 'Syne', sans-serif;
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--white);
+    letter-spacing: -2px;
+    line-height: 1;
+  }
+  .price-main span {
+    font-size: 22px;
+    vertical-align: super;
+    color: var(--green);
+  }
+  .price-note {
+    font-size: 12px;
+    color: var(--grey);
+    font-family: 'Space Mono', monospace;
+  }
+
+  .btn-final {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto 16px;
+    background: var(--green);
+    color: var(--black);
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    padding: 20px 32px;
+    border: none;
+    border-radius: 8px;
+    
+    transition: all 0.25s;
+    text-decoration: none;
+    letter-spacing: -0.3px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-final::before {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: rgba(255,255,255,0.25);
+    transform: skewX(-20deg);
+    transition: left 0.4s ease;
+  }
+  .btn-final:hover::before { left: 150%; }
+  .btn-final:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,255,135,0.35);
+  }
+
+  .arrow-icon {
+    width: 22px; height: 22px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+  }
+
+  .guarantee-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .guarantee-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    font-family: 'Space Mono', monospace;
+  }
+  .guarantee-item svg { color: var(--green); opacity: 0.6; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    padding: 32px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: rgba(255,255,255,0.2);
+  }
+  .footer-note {
+    font-size: 11px;
+    color: rgba(255,255,255,0.15);
+    font-family: 'Space Mono', monospace;
+    text-align: right;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Typewriter */
+  .typewriter {
+    display: inline;
+    border-right: 3px solid var(--green);
+    animation: blink-cursor 0.7s step-end infinite;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  @keyframes blink-cursor { 50% { border-color: transparent; } }
+
+  /* ===== TAP EFFECTS ===== */
+
+  /* Zoom bounce on tap for buttons */
+  .tap-zoom {
+    transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .tap-zoom:active {
+    transform: scale(0.93);
+  }
+
+  /* Feature cards: scale up on tap */
+  .feature-card {
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s, background 0.2s;
+  }
+  .feature-card:active {
+    transform: scale(1.03);
+    border-color: rgba(0,255,135,0.4);
+  }
+
+  /* Pain items: tap bounce */
+  .pain-item {
+    -webkit-tap-highlight-color: transparent;
+  }
+  .pain-item:active {
+    transform: scale(0.97) translateX(4px);
+    border-color: rgba(255,45,45,0.4);
+  }
+
+  /* Testimonials: tap lift */
+  .testimonial {
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .testimonial:active {
+    transform: scale(0.98);
+    border-color: rgba(0,255,135,0.2);
+  }
+
+  /* Ripple effect */
+  .ripple-wrap {
+    position: relative;
+    overflow: hidden;
+  }
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(0,255,135,0.25);
+    transform: scale(0);
+    animation: rippleAnim 0.5s linear;
+    pointer-events: none;
+  }
+  @keyframes rippleAnim {
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* Logo tap pop */
+  .logo {
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .logo:active { transform: scale(1.08); }
+
+  /* Stat items tap */
+  .stat-item {
+    transition: background 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .stat-item:active { background: rgba(0,255,135,0.07); }
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Finanças Pro
+  </div>
+  <a href="https://pay.kiwify.com.br/ojYBzJ6" class="nav-cta tap-zoom ripple-wrap">Ativar Agora — R$27</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="glow-red"></div>
+  <div class="glow-green"></div>
+
+  <div class="hero-badge">
+    <div class="badge-dot"></div>
+    SISTEMA FINANCEIRO INTELIGENTE
+  </div>
+
+  <h1>
+    <span class="h1-line1">Você trabalha</span>
+    <span class="h1-line2">todo mês.<br>O dinheiro<br>some.</span>
+    <span class="h1-line3">Chega disso.</span>
+  </h1>
+
+  <p class="hero-sub">
+    Finanças Pro não é uma planilha.<br>
+    É um <strong>sistema de controle financeiro com inteligência embutida</strong> — feito pra quem quer parar de adivinhar e começar a tomar decisões de verdade.
+  </p>
+
+  <div class="hero-cta-group">
+    <a href="https://pay.kiwify.com.br/ojYBzJ6" class="btn-primary tap-zoom ripple-wrap">
+      Quero meu controle total
+      <span class="price-tag">R$27</span>
+    </a>
+    <div class="trust-row">
+      <div class="trust-item">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Excel & Google Sheets
+      </div>
+      <div class="trust-item">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Acesso imediato
+      </div>
+      <div class="trust-item">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        7 dias de garantia
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-item">
+      <span class="stat-num" id="counter1">0</span>
+      <span class="stat-label">Usuários ativos</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">R$<span id="counter2">0</span>k</span>
+      <span class="stat-label">Controlados/mês</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="counter3">0</span><span class="stat-num">%</span>
+      <span class="stat-label">Saem do vermelho</span>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain-section reveal">
+  <div class="section-tag">O problema</div>
+  <h2 class="pain-title">
+    Por que você ainda<br>
+    <em>não consegue guardar</em><br>
+    dinheiro?
+  </h2>
+
+  <div class="pain-list">
+    <div class="pain-item">
+      <span class="pain-icon">📊</span>
+      <p class="pain-text"><strong>Você tenta anotar tudo</strong> mas desiste depois de 3 dias. Sem estrutura, sem continuidade.</p>
+    </div>
+    <div class="pain-item">
+      <span class="pain-icon">🔄</span>
+      <p class="pain-text"><strong>O dinheiro sempre acaba</strong> antes do mês. Você não sabe onde foi — só sabe que sumiu.</p>
+    </div>
+    <div class="pain-item">
+      <span class="pain-icon">💳</span>
+      <p class="pain-text"><strong>Parcelas e assinaturas invisíveis</strong> sugam R$300, R$500 por mês sem você perceber.</p>
+    </div>
+    <div class="pain-item">
+      <span class="pain-icon">🎯</span>
+      <p class="pain-text"><strong>Você tem sonhos financeiros</strong> mas nenhuma rota clara. Viagem, reserva, investimento... parecem distantes demais.</p>
+    </div>
+    <div class="pain-item">
+      <span class="pain-icon">😤</span>
+      <p class="pain-text"><strong>Planilhas genéricas do YouTube</strong> são confusas, feias e não funcionam pra sua realidade.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section class="solution-section reveal">
+  <div class="section-tag">A solução</div>
+  <h2 class="solution-intro">
+    Finanças Pro: o sistema que<br>
+    <em>pensa junto com você</em>
+  </h2>
+  <p class="solution-sub">Não é só organizar. É ter visibilidade total, alertas automáticos e um painel que transforma caos em clareza — em menos de 10 minutos.</p>
+
+  <div class="feature-grid">
+    <div class="feature-card featured">
+      <div class="feature-num">01 — CORE</div>
+      <div class="feature-icon-wrap">🧠</div>
+      <div class="feature-title">Dashboard de Inteligência Financeira</div>
+      <div class="feature-desc">Visão 360° das suas finanças em tempo real. Saldo líquido, projeção do mês, gastos por categoria — tudo calculado automaticamente enquanto você vive.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">02</div>
+      <div class="feature-icon-wrap">⚡</div>
+      <div class="feature-title">Alertas de Vazamento</div>
+      <div class="feature-desc">Identifica onde seu dinheiro está "vazando" todo mês. Gastos acima do padrão são sinalizados automaticamente.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">03</div>
+      <div class="feature-icon-wrap">🎯</div>
+      <div class="feature-title">Metas com Cronômetro</div>
+      <div class="feature-desc">Define metas e acompanha o progresso dia a dia. O sistema calcula quanto você precisa guardar por mês para chegar lá.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">04</div>
+      <div class="feature-icon-wrap">📈</div>
+      <div class="feature-title">Tracker de Investimentos</div>
+      <div class="feature-desc">Acompanha sua carteira, rendimentos e evolução do patrimônio. Simples, sem complicação.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-num">05</div>
+      <div class="feature-icon-wrap">🔮</div>
+      <div class="feature-title">Projeção de Futuro</div>
+      <div class="feature-desc">Veja como seu patrimônio evolui nos próximos 12 meses com base nos seus hábitos atuais.</div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD PREVIEW -->
+<section class="preview-section reveal">
+  <div class="section-tag">Preview</div>
+  <h3 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:20px;color:var(--white)">Isso é o que você vai ver toda manhã</h3>
+
+  <div class="dashboard-mock">
+    <div class="dash-header">
+      <div class="dash-dot r"></div>
+      <div class="dash-dot y"></div>
+      <div class="dash-dot g"></div>
+      <span class="dash-label">Finanças Pro Dashboard — Maio 2026</span>
+    </div>
+    <div class="dash-body">
+      <div class="dash-row">
+        <div class="dash-metric green">
+          <div class="dash-metric-label">Saldo Livre</div>
+          <div class="dash-metric-val pos">R$1.840</div>
+          <div class="dash-metric-change up">↑ +12% vs mês passado</div>
+        </div>
+        <div class="dash-metric red">
+          <div class="dash-metric-label">Gastos do Mês</div>
+          <div class="dash-metric-val neg">R$2.160</div>
+          <div class="dash-metric-change dn">↓ -8% vs limite</div>
+        </div>
+      </div>
+      <div class="dash-row">
+        <div class="dash-metric">
+          <div class="dash-metric-label">Meta: Reserva</div>
+          <div class="dash-metric-val neu">67%</div>
+          <div class="dash-metric-change up">↑ R$6.700 / R$10k</div>
+        </div>
+        <div class="dash-metric green">
+          <div class="dash-metric-label">Investimentos</div>
+          <div class="dash-metric-val pos">R$12.430</div>
+          <div class="dash-metric-change up">↑ +2.3% este mês</div>
+        </div>
+      </div>
+      <div class="dash-chart-area">
+        <div class="chart-title">Gastos por categoria — últimos 6 meses</div>
+        <div class="bars">
+          <div class="bar" style="height:45%;background:rgba(0,255,135,0.3)"><span class="bar-label">Jan</span></div>
+          <div class="bar" style="height:72%;background:rgba(0,255,135,0.4)"><span class="bar-label">Fev</span></div>
+          <div class="bar" style="height:60%;background:rgba(0,255,135,0.35)"><span class="bar-label">Mar</span></div>
+          <div class="bar" style="height:88%;background:rgba(255,45,45,0.5)"><span class="bar-label">Abr</span></div>
+          <div class="bar" style="height:55%;background:rgba(0,255,135,0.45)"><span class="bar-label">Mai</span></div>
+          <div class="bar" style="height:40%;background:rgba(0,255,135,0.25);border:1px dashed rgba(0,255,135,0.3)"><span class="bar-label">Jun</span></div>
+        </div>
+      </div>
+      <div class="ai-insight">
+        <span class="ai-badge">IA</span>
+        <p class="ai-text">Em Abril você gastou <strong>R$340 a mais que o normal</strong> em alimentação. Cortando apenas jantar fora nos fins de semana, você economizaria <strong>R$180/mês</strong> — o suficiente para atingir sua meta 3 meses antes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="proof-section reveal">
+  <div class="section-tag">Resultados reais</div>
+  <h2 style="font-family:'Syne',sans-serif;font-size:clamp(24px,5vw,38px);font-weight:800;letter-spacing:-1px;margin-bottom:8px;color:var(--white)">Quem usou, sentiu a diferença</h2>
+  <p style="color:rgba(255,255,255,0.35);font-size:14px;margin-bottom:0">Não depoimentos motivacionais. Números reais.</p>
+
+  <div class="testimonials">
+    <div class="testimonial">
+      <span class="result-badge">+R$800/mês poupado</span>
+      <p class="testimonial-text">"Eu achei que era só mais uma planilha. Em 2 semanas eu descobri que tava gastando <em>R$400 em assinaturas que nem usava</em>. Cancelei tudo e o dinheiro apareceu do nada."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">MR</div>
+        <div class="author-info">
+          <div class="author-name">Marcelo Rocha</div>
+          <div class="author-role">Designer, 29 anos — São Paulo</div>
+        </div>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <span class="result-badge">Reserva: R$0 → R$8k</span>
+      <p class="testimonial-text">"Nunca consegui guardar nada. Com o sistema de metas do Finanças Pro eu fui de <em>zero para R$8 mil de reserva em 8 meses</em>. Parece impossível mas é só questão de ver os números."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">CS</div>
+        <div class="author-info">
+          <div class="author-name">Camila Santos</div>
+          <div class="author-role">Analista, 31 anos — BH</div>
+        </div>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <span class="result-badge">Saiu do cheque especial</span>
+      <p class="testimonial-text">"Tava no cheque especial faz 2 anos. Em 30 dias usando o Finanças Pro <em>eu entendi onde tava errando</em> e já no mês seguinte tava no zero a zero. Hoje tô no positivo."</p>
+      <div class="testimonial-author">
+        <div class="author-avatar">TL</div>
+        <div class="author-info">
+          <div class="author-name">Thiago Lima</div>
+          <div class="author-role">Vendedor, 26 anos — Rio</div>
+        </div>
+        <div class="stars">★★★★★</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section reveal" id="cta">
+  <p class="cta-eyebrow">Última chance hoje</p>
+  <h2 class="cta-heading">
+    Chega de sobreviver<br>
+    até o <span class="highlight">próximo salário.</span>
+  </h2>
+  <p class="cta-sub">Por menos de um almoço, você tem o sistema que vai<br>mudar sua relação com dinheiro pra sempre.</p>
+
+  <div class="price-block">
+    <span class="price-old">de R$97</span>
+    <div class="price-main"><span>R$</span>27</div>
+    <span class="price-note">pagamento único • acesso vitalício</span>
+  </div>
+
+  <a href="https://pay.kiwify.com.br/ojYBzJ6" class="btn-final tap-zoom ripple-wrap">
+    Quero o Finanças Pro agora
+    <span class="arrow-icon">→</span>
+  </a>
+
+  <div class="guarantee-row">
+    <div class="guarantee-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      7 dias de garantia total
+    </div>
+    <div class="guarantee-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      Excel & Google Sheets
+    </div>
+    <div class="guarantee-item">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      Suporte incluso
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Finanças Pro © 2026</div>
+  <div class="footer-note">Produto digital. Entrega imediata.<br>Garantia de 7 dias.</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  reveals.forEach(r => obs.observe(r));
+
+  // Counters
+  function animateCounter(el, target, suffix = '', duration = 1800) {
+    let start = null;
+    function step(ts) {
+      if (!start) start = ts;
+      const progress = Math.min((ts - start) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(ease * target) + suffix;
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const counterObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCounter(document.getElementById('counter1'), 4200);
+        animateCounter(document.getElementById('counter2'), 18);
+        animateCounter(document.getElementById('counter3'), 94);
+        counterObs.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const strip = document.querySelector('.stat-strip');
+  if (strip) counterObs.observe(strip);
+
+  // Ripple effect on tap
+  document.querySelectorAll('.ripple-wrap').forEach(el => {
+    el.addEventListener('touchstart', function(e) {
+      const rect = el.getBoundingClientRect();
+      const touch = e.touches[0];
+      const x = touch.clientX - rect.left;
+      const y = touch.clientY - rect.top;
+      const size = Math.max(rect.width, rect.height);
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      ripple.style.cssText = `width:${size}px;height:${size}px;left:${x - size/2}px;top:${y - size/2}px`;
+      el.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 600);
+    }, { passive: true });
+  });
+</script>
+</body>
+</html>
